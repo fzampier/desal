@@ -1,6 +1,6 @@
 # DESAL — Decongestion with Saline Loading
 
-A pragmatic, open-label, multicentre, randomized controlled trial of hypertonic saline for acute heart failure, with an accompanying systematic review and meta-analysis.
+A pragmatic, open-label, multicentre, randomized controlled trial of hypertonic saline for acute heart failure, with an accompanying systematic review and meta-analysis. The SR/MA is being conducted to inform the trial.
 
 **Principal Investigators:** Fernando G. Zampieri, Justin A. Ezekowitz
 
