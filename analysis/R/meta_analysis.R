@@ -625,6 +625,20 @@ main <- function() {
     "los_n_ctrl", "mg/dL"
   )
 
+  message("\n=== SECONDARY: NATRIURESIS (24H URINE SODIUM) ===")
+  results$natriuresis <- run_continuous_ma(
+    df, outdir, "Natriuresis 24h", "natriuresis_mean_int", "natriuresis_sd_int",
+    "los_n_int", "natriuresis_mean_ctrl", "natriuresis_sd_ctrl",
+    "los_n_ctrl", "mEq"
+  )
+
+  message("\n=== SECONDARY: CHLORIDE CHANGE ===")
+  results$chloride <- run_continuous_ma(
+    df, outdir, "Chloride Change", "chloride_change_mean_int", "chloride_change_sd_int",
+    "los_n_int", "chloride_change_mean_ctrl", "chloride_change_sd_ctrl",
+    "los_n_ctrl", "mEq/L"
+  )
+
   message("\n=== SAFETY: HYPERNATREMIA ===")
   results$hypernatremia <- run_binary_ma(
     df, outdir, "Hypernatremia",
@@ -637,6 +651,13 @@ main <- function() {
     df, outdir, "Acute Kidney Injury",
     "aki_events_int", "mortality_n_int",
     "aki_events_ctrl", "mortality_n_ctrl"
+  )
+
+  message("\n=== SAFETY: TROPONIN ELEVATION ===")
+  results$troponin <- run_binary_ma(
+    df, outdir, "Troponin Elevation",
+    "troponin_events_int", "troponin_n_int",
+    "troponin_events_ctrl", "troponin_n_ctrl"
   )
 
   # ── Subgroup analyses ──

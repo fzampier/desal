@@ -186,10 +186,13 @@ build_template_sof <- function() {
     "Heart failure readmission",
     "Body weight change",
     "24h urine output",
+    "24h natriuresis",
     "Serum sodium change",
+    "Serum chloride change",
     "Serum creatinine change",
     "Hypernatremia events",
-    "Acute kidney injury"
+    "Acute kidney injury",
+    "Troponin elevation"
   )
 
   data.frame(

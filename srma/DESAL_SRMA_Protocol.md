@@ -64,7 +64,7 @@ The primary objective is to determine the effect of intravenous hypertonic salin
 
 Secondary objectives include assessment of effects on length of hospital stay, heart failure readmission, body weight change, urine output, renal function, serum sodium, natriuretic peptides, hypernatremia events, and acute kidney injury.
 
-An additional objective is to perform trial sequential analysis to evaluate whether the accumulated evidence is sufficient to draw firm conclusions or whether further trials are needed, thereby informing the rationale for the planned DESAL trial.
+An additional objective is to perform trial sequential analysis to evaluate whether the accumulated evidence is sufficient to draw firm conclusions or whether further trials are needed.
 
 ---
 
@@ -105,8 +105,11 @@ Intravenous loop diuretics alone, or co-administered with isotonic saline (0.9% 
 - Change in serum creatinine from baseline (mg/dL or µmol/L)
 - Change in serum sodium from baseline (mEq/L)
 - Change in BNP or NT-proBNP from baseline (pg/mL)
+- 24-hour urine sodium excretion (natriuresis, mEq)
+- Change in serum chloride from baseline (mEq/L)
 - Hypernatremia events (serum sodium >145 mEq/L)
 - Acute kidney injury (as defined by study authors)
+- Troponin elevation during treatment (as defined by study authors; safety endpoint)
 
 #### Study types
 
@@ -433,8 +436,11 @@ Results will be submitted for peer-reviewed publication and presented at relevan
 | Outcome | Creatinine change: mean (SD) | Numeric |
 | Outcome | Sodium change: mean (SD) | Numeric |
 | Outcome | BNP/NT-proBNP change: mean (SD) | Numeric |
+| Outcome | 24h urine sodium excretion (natriuresis): mean (SD) | Numeric |
+| Outcome | Chloride change: mean (SD) | Numeric |
 | Outcome | Hypernatremia events: events/N per arm | Numeric |
 | Outcome | AKI events: events/N per arm | Numeric |
+| Outcome | Troponin elevation events: events/N per arm | Numeric |
 
 ---
 

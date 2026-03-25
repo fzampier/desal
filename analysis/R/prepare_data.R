@@ -119,6 +119,12 @@ flatten_extraction <- function(ext) {
     urine_mean_ctrl = safe("urine_output_24h", "value_control"),
     urine_sd_ctrl = safe("urine_output_24h", "sd_control"),
 
+    # Natriuresis (24h urine sodium excretion)
+    natriuresis_mean_int = safe("natriuresis_24h", "value_intervention"),
+    natriuresis_sd_int = safe("natriuresis_24h", "sd_intervention"),
+    natriuresis_mean_ctrl = safe("natriuresis_24h", "value_control"),
+    natriuresis_sd_ctrl = safe("natriuresis_24h", "sd_control"),
+
     # Sodium change
     sodium_change_mean_int = safe("sodium_change", "value_intervention"),
     sodium_change_sd_int = safe("sodium_change", "sd_intervention"),
@@ -131,11 +137,21 @@ flatten_extraction <- function(ext) {
     creat_change_mean_ctrl = safe("creatinine_change", "value_control"),
     creat_change_sd_ctrl = safe("creatinine_change", "sd_control"),
 
+    # Chloride change
+    chloride_change_mean_int = safe("chloride_change", "value_intervention"),
+    chloride_change_sd_int = safe("chloride_change", "sd_intervention"),
+    chloride_change_mean_ctrl = safe("chloride_change", "value_control"),
+    chloride_change_sd_ctrl = safe("chloride_change", "sd_control"),
+
     # Safety
     hypernatremia_events_int = safe("hypernatremia", "events_intervention"),
     hypernatremia_events_ctrl = safe("hypernatremia", "events_control"),
     aki_events_int = safe("aki", "events_intervention"),
     aki_events_ctrl = safe("aki", "events_control"),
+    troponin_events_int = safe("troponin_elevation", "events_intervention"),
+    troponin_n_int = safe("troponin_elevation", "n_intervention"),
+    troponin_events_ctrl = safe("troponin_elevation", "events_control"),
+    troponin_n_ctrl = safe("troponin_elevation", "n_control"),
 
     # RoB
     rob_randomization = safe("rob_randomization"),

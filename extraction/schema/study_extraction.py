@@ -401,6 +401,10 @@ class StudyExtraction(BaseModel):
     # Outcomes — Diuretic response
     # ------------------------------------------------------------------
     urine_output_24h: Optional[ContinuousOutcome] = None
+    natriuresis_24h: Optional[ContinuousOutcome] = Field(
+        default=None,
+        description="24-hour urine sodium excretion (mEq)",
+    )
     weight_change: Optional[ContinuousOutcome] = None
     net_fluid_balance: Optional[ContinuousOutcome] = None
 
@@ -414,6 +418,11 @@ class StudyExtraction(BaseModel):
     # ------------------------------------------------------------------
     hypernatremia: Optional[BinaryOutcome] = None
     aki: Optional[BinaryOutcome] = None
+    troponin_elevation: Optional[BinaryOutcome] = Field(
+        default=None,
+        description="Troponin elevation events during treatment "
+                    "(as defined by study authors)",
+    )
 
     # ------------------------------------------------------------------
     # Risk of Bias (RoB 2.0)
