@@ -41,6 +41,35 @@ The full methodology is documented in `pipeline/DESAL_LLM_SRMA_Pipeline.md`.
 
 All pipeline code was pre-specified and committed before data exposure. The git history serves as evidence of pre-specification.
 
+## Outcomes
+
+**Primary:** All-cause mortality
+
+**Secondary:**
+- Length of hospital stay
+- Heart failure readmission
+- Body weight change
+- 24-hour urine output
+- 24-hour natriuresis (urine sodium excretion)
+- Serum sodium change
+- Serum chloride change
+- Serum creatinine change
+- BNP/NT-proBNP change
+
+**Safety:**
+- Hypernatremia events (Na >145 mEq/L)
+- Acute kidney injury
+- Troponin elevation
+
+## Pre-Specified Methodological Decisions
+
+- **Overlapping cohorts:** Decision rules for mapping Palermo group publications to unique cohorts (largest sample / longest follow-up retained)
+- **Zero-event handling:** Exclude zero-zero studies; 0.5 continuity correction for one-arm zeros; TACC sensitivity analysis
+- **Crossover trials:** First-period data preferred; combined crossover data included in sensitivity analysis only
+- **Ambulatory populations:** Excluded from primary analysis (PICO requires hospitalized ADHF); included in broadened-population sensitivity
+- **Outcome timepoints:** Longest follow-up for mortality/readmission; 48-72h for physiological outcomes
+- **8 pre-specified sensitivity analyses** including exclusion of Palermo group, high RoB studies, crossover trials, fixed-effect model, leave-one-out, broadened population, TACC, and alternative timepoints
+
 ## Requirements
 
 ### Python

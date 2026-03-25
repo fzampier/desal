@@ -520,7 +520,7 @@ Both Claude and GPT-5.4 independently screen each citation. They receive the sam
 - **P:** Adults ≥18 years hospitalized with acute decompensated heart failure
 - **I:** Intravenous hypertonic saline (>0.9% NaCl) co-administered with loop diuretics
 - **C:** Loop diuretics alone ± isotonic saline or placebo (no hypertonic saline)
-- **O:** All-cause mortality, length of stay, readmission, renal function, diuretic response, safety events
+- **O:** All-cause mortality, length of stay, readmission, renal function, diuretic response (urine output, natriuresis), electrolytes (sodium, chloride), BNP/NT-proBNP, safety events (hypernatremia, AKI, troponin)
 - **Study type:** Randomized controlled trials only
 
 Each model outputs structured JSON per citation:

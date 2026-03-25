@@ -337,6 +337,8 @@ class StudyExtraction(BaseModel):
     # Outcomes — Diuretic response
     urine_output_24h_intervention: Optional[float] = None
     urine_output_24h_control: Optional[float] = None
+    natriuresis_24h_intervention: Optional[float] = Field(default=None, description="24h urine sodium excretion, intervention arm (mEq)")
+    natriuresis_24h_control: Optional[float] = Field(default=None, description="24h urine sodium excretion, control arm (mEq)")
     weight_change_intervention: Optional[float] = None
     weight_change_control: Optional[float] = None
 
@@ -349,6 +351,8 @@ class StudyExtraction(BaseModel):
     hypernatremia_events_control: Optional[int] = None
     aki_events_intervention: Optional[int] = None
     aki_events_control: Optional[int] = None
+    troponin_elevation_intervention: Optional[int] = Field(default=None, description="Troponin elevation events, intervention arm")
+    troponin_elevation_control: Optional[int] = Field(default=None, description="Troponin elevation events, control arm")
 
     # Risk of Bias (RoB 2.0)
     rob_randomization: Optional[RoBJudgment] = None
