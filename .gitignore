@@ -1,0 +1,47 @@
+# Trial design files (not open-sourced)
+trial/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# API keys and secrets
+.env
+*.env
+credentials.json
+
+# Generated data (will be reproduced by pipeline)
+extraction/extracted_text/
+extraction/extracted_tables/
+extraction/data/
+extraction/pdfs/
+analysis/data/
+analysis/output/
+screening_output/
+fulltext_screening_output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
