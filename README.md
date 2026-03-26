@@ -29,7 +29,7 @@ The full methodology is documented in `pipeline/DESAL_LLM_SRMA_Pipeline.md`.
 | Screening prompt + resolution logic | Pre-specified | `pipeline/` |
 | Title/abstract screening orchestrator | Built | `pipeline/screening_orchestrator.py` |
 | Full-text screening | Built | `pipeline/fulltext_screening.py` |
-| Pydantic extraction schema | Pre-specified | `extraction/schema/study_extraction.py` |
+| Pydantic extraction schema | Built | `extraction/schema/study_extraction.py` |
 | Extraction orchestrator | Built | `extraction/scripts/orchestrate_extraction.py` |
 | Disagreement classifier (L0-5) | Built | `extraction/scripts/compare_extractions.py` |
 | LLM auditor | Built | `extraction/scripts/llm_auditor.py` |
