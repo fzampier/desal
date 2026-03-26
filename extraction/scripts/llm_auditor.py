@@ -24,6 +24,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import os
 import re
@@ -418,14 +419,33 @@ def save_final_extractions(
     report: dict[str, Any],
     extraction_log_path: str,
     output_dir: str,
+    disagreements_path: Optional[str] = None,
 ) -> str:
-    """Build final extractions incorporating auditor decisions.
+    """Build final extractions incorporating classifier and auditor decisions.
 
-    For auto-resolved fields, use the auditor's recommended value.
-    For human-review fields, leave as null with a flag.
+    Resolution order:
+    1. Level 0-1 auto-accepted fields: use agreed/more-precise value
+    2. Level 2 auto-accepted (both verified): use Model A value
+    3. Auditor-resolved fields (confidence >= 0.80): use auditor recommendation
+    4. Remaining fields: flag for human review
+
+    Without disagreements_path, falls back to Model A base + auditor overrides.
     """
     with open(extraction_log_path, "r", encoding="utf-8") as f:
         log = json.load(f)
+
+    # Load classifier results if available
+    classifier_results = {}
+    if disagreements_path is None:
+        disagreements_path = os.path.join(
+            os.path.dirname(extraction_log_path), "disagreements.json"
+        )
+    if os.path.exists(disagreements_path):
+        with open(disagreements_path, "r", encoding="utf-8") as f:
+            disagreements = json.load(f)
+        for study_report in disagreements.get("studies", []):
+            label = study_report.get("study_label", "")
+            classifier_results[label] = study_report
 
     # Index auditor decisions by (study_label, field)
     auditor_lookup = {}
@@ -443,7 +463,32 @@ def save_final_extractions(
         if not base:
             continue
 
-        # Apply auditor overrides
+        base = copy.deepcopy(base)
+
+        # Step 1: Apply classifier auto-accepted values (Level 0-2)
+        study_comparisons = classifier_results.get(label, {}).get("comparisons", [])
+        model_b_extraction = study.get("model_b", {}).get("extraction", {})
+        for comp in study_comparisons:
+            field = comp["field"]
+            level = comp["level"]
+            val_a = comp["val_a"]
+            val_b = comp["val_b"]
+
+            if level == 0:
+                # Perfect agreement — keep base (Model A) value
+                pass
+            elif level == 1:
+                # Trivial difference — use more precise value
+                if isinstance(val_a, (int, float)) and isinstance(val_b, (int, float)):
+                    str_a = str(val_a).rstrip("0").rstrip(".")
+                    str_b = str(val_b).rstrip("0").rstrip(".")
+                    if len(str_b) > len(str_a):
+                        _set_nested(base, field, val_b)
+            elif level == 2 and comp.get("verified_a") and comp.get("verified_b"):
+                # Both verified minor diff — keep Model A (default)
+                pass
+
+        # Step 2: Apply auditor overrides (Level 2 unverified + Level 3-5)
         pending_human = []
         for key, decision in auditor_lookup.items():
             if key[0] != label:

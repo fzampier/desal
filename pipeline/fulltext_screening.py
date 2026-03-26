@@ -355,7 +355,31 @@ def main():
     if not pdf_map:
         print(f"No PDFs found in {args.pdfs}")
         sys.exit(1)
-    print(f"Found {len(pdf_map)} PDFs to screen.")
+    print(f"Found {len(pdf_map)} PDFs in directory.")
+
+    # Filter to only included/uncertain citations from T/A screening if log provided
+    if args.screening_log:
+        included = load_included_citations(args.screening_log)
+        included_ids = {e["citation_id"] for e in included}
+        # Match PDF stems against citation IDs (strip PMID_ prefix for matching)
+        normalized_ids = set()
+        for cid in included_ids:
+            normalized_ids.add(cid)
+            normalized_ids.add(cid.replace("PMID_", ""))
+        filtered_map = {
+            stem: path for stem, path in pdf_map.items()
+            if stem in normalized_ids or f"PMID_{stem}" in normalized_ids
+        }
+        skipped = len(pdf_map) - len(filtered_map)
+        if skipped > 0:
+            print(f"Filtered by screening log: {len(filtered_map)} PDFs match "
+                  f"included/uncertain citations ({skipped} skipped).")
+        pdf_map = filtered_map
+
+    if not pdf_map:
+        print("No PDFs to screen after filtering.")
+        sys.exit(0)
+    print(f"Screening {len(pdf_map)} PDFs.")
 
     # Screen each PDF
     log_entries = []

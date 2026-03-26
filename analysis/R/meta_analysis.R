@@ -369,11 +369,19 @@ run_subgroup_analysis <- function(ma_result, df, subgroup_col, outcome_label,
     return(NULL)
   }
 
-  d <- df %>% filter(!is.na(.data[[subgroup_col]]))
-  if (nrow(d) < 4) return(NULL)  # need at least 2 per subgroup
+  # CRITICAL: align subgroup vector with the meta object's studies.
+  # The meta object was built from an outcome-specific filtered dataset,
+  # so we must match on study labels, not assume row correspondence.
+  ma_studies <- ma_result$studlab
+  sg_lookup <- setNames(df[[subgroup_col]], df$study_id)
+  sg_vector <- sg_lookup[ma_studies]
+
+  # Drop studies with missing subgroup values
+  has_sg <- !is.na(sg_vector)
+  if (sum(has_sg) < 4) return(NULL)  # need at least 2 per subgroup
 
   # Check that at least 2 levels exist with >= 2 studies each
-  level_counts <- table(d[[subgroup_col]])
+  level_counts <- table(sg_vector[has_sg])
   valid_levels <- names(level_counts[level_counts >= 2])
   if (length(valid_levels) < 2) {
     message(sprintf("  Subgroup '%s': fewer than 2 levels with ≥2 studies.",
@@ -383,17 +391,17 @@ run_subgroup_analysis <- function(ma_result, df, subgroup_col, outcome_label,
 
   message(sprintf("  Subgroup analysis: %s by %s", outcome_label, subgroup_col))
 
-  # Update meta-analysis with subgroup
+  # Update meta-analysis with aligned subgroup vector
   tryCatch({
-    m_sub <- update(ma_result, subgroup = d[[subgroup_col]])
+    m_sub <- update(ma_result, subgroup = sg_vector)
 
     safe_name <- gsub("[^a-zA-Z0-9]", "_", tolower(outcome_label))
     safe_sub <- gsub("[^a-zA-Z0-9]", "_", tolower(subgroup_col))
+    n_studies_sg <- sum(has_sg)
     pdf(file.path(outdir, "forest_plots",
                   paste0(safe_name, "_by_", safe_sub, ".pdf")),
-        width = 14, height = max(8, nrow(d) * 0.6 + 4))
+        width = 14, height = max(8, n_studies_sg * 0.6 + 4))
     forest(m_sub,
-           sortvar = d$year,
            label.left = "Favours HSS",
            label.right = "Favours Control",
            print.tau2 = TRUE,
@@ -526,12 +534,27 @@ build_summary_table <- function(results) {
     if (is.null(m)) next
     if (!inherits(m, "meta")) next
 
+    # Binary outcomes (RR, OR) are on log scale — exponentiate.
+    # Continuous outcomes (MD, SMD) are on natural scale — report as-is.
+    is_log_scale <- m$sm %in% c("RR", "OR", "HR")
+
+    if (is_log_scale) {
+      effect_val <- exp(m$TE.random)
+      ci_lo <- exp(m$lower.random)
+      ci_hi <- exp(m$upper.random)
+    } else {
+      effect_val <- m$TE.random
+      ci_lo <- m$lower.random
+      ci_hi <- m$upper.random
+    }
+
     rows[[length(rows) + 1]] <- data.frame(
       outcome = name,
       n_studies = m$k,
-      effect_random = sprintf("%.2f", exp(m$TE.random)),
-      ci_lower = sprintf("%.2f", exp(m$lower.random)),
-      ci_upper = sprintf("%.2f", exp(m$upper.random)),
+      effect_measure = m$sm,
+      effect_random = sprintf("%.2f", effect_val),
+      ci_lower = sprintf("%.2f", ci_lo),
+      ci_upper = sprintf("%.2f", ci_hi),
       p_value = sprintf("%.4f", m$pval.random),
       I2 = sprintf("%.1f%%", m$I2 * 100),
       tau2 = sprintf("%.4f", m$tau2),
