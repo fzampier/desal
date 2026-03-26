@@ -34,8 +34,9 @@ The full methodology is documented in `pipeline/DESAL_LLM_SRMA_Pipeline.md`.
 | Disagreement classifier (L0-5) | Built | `extraction/scripts/compare_extractions.py` |
 | LLM auditor | Built | `extraction/scripts/llm_auditor.py` |
 | Clinical data extractor (4 layers) | Built | `clinical-data-extractor/` |
-| Meta-analysis R scripts | Pre-specified | `analysis/R/meta_analysis.R` |
-| Trial sequential analysis | Pre-specified | `analysis/R/tsa.R` |
+| Meta-analysis R scripts | Built | `analysis/R/meta_analysis.R` |
+| Trial sequential analysis | Built | `analysis/R/tsa.R` |
+| Data preparation | Built | `analysis/R/prepare_data.R` |
 | PRISMA flow diagram | Built | `reporting/prisma_flow.R` |
 | GRADE Summary of Findings | Built | `reporting/grade_sof.R` |
 
@@ -142,4 +143,4 @@ Rscript reporting/grade_sof.R
 
 ## License
 
-This protocol and analysis code are made available for transparency and reproducibility. Please cite appropriately if reusing.
+This work is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/). See [LICENSE](LICENSE) for details.

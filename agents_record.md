@@ -41,3 +41,4 @@ Format: `Agent Name — Date: Brief description of what was done`
 - **Claude Code** — March 25, 2026: Added CC BY 4.0 license
 - **Claude Code** — March 25, 2026: Initialized git repo, committed all files (excluding trial/), pushed to github.com:fzampier/desal.git
 - **Claude Code** — March 25, 2026: Assisted with PROSPERO registration form answers
+- **Claude Code** — March 25, 2026: Fixed README pipeline table (R scripts marked Built), updated license section to reference CC BY 4.0
