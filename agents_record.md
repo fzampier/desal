@@ -11,7 +11,7 @@ Format: `Agent Name — Date: Brief description of what was done`
 - **Claude Dispatch (Cowork)** — March 24, 2026: Created initial project folder and trial synopsis (MD + PDF) with power curves
 - **Claude Dispatch (Cowork)** — March 24, 2026: Ran power simulations for D14 win ratio (Python, 2000 iterations per scenario)
 - **Claude Dispatch (Cowork)** — March 24, 2026: Created formula-based sample size calculators (R + Python)
-- **Claude Dispatch (Cowork)** — March 24, 2026: Conducted PubMed literature search and wrote HTS_AHF_Literature_Review.md
+- **Claude Dispatch (Cowork)** — March 24, 2026: Conducted preliminary PubMed literature search and wrote HTS_AHF_Literature_Review.md
 - **Claude Dispatch (Cowork)** — March 24, 2026: Created SR/MA protocol for PROSPERO (MD + PDF)
 - **Claude Dispatch (Cowork)** — March 24, 2026: Designed dual-LLM screening pipeline specification
 - **Claude Dispatch (Cowork)** — March 24, 2026: Created screening prompt template v1.0 (pre-specified before data)
@@ -43,3 +43,6 @@ Format: `Agent Name — Date: Brief description of what was done`
 - **Claude Code** — March 25, 2026: Assisted with PROSPERO registration form answers
 - **Claude Code** — March 25, 2026: Fixed README pipeline table (R scripts and Pydantic schema marked Built), updated license section to reference CC BY 4.0
 - **Claude Code** — March 25, 2026: Project audit — fixed all findings: added PROSPERO ID (CRD420261351795) to protocol, fixed AGENTS.md Codex→Claude references and skill path, added peak sodium as exploratory/safety outcome to protocol Appendix B, added bnp_unit field to extraction schema, fixed per-outcome N denominators in prepare_data.R and meta_analysis.R, aligned AGENTS.md wording with CLAUDE.md
+- **Claude Code** — March 25, 2026: Created desal_trial.md (full trial briefing with connection to SR/MA, sample size rationale, files in trial/)
+- **Claude Code** — March 25, 2026: Created architecture.md (data flow diagram, directory map, 10 pipeline stages, human decision points, execution DAG)
+- **Claude Code** — March 25, 2026: Restructured CLAUDE.md and AGENTS.md — removed trial design section (now in desal_trial.md), SR/MA focused, added key documents table, cleaned up file listings
