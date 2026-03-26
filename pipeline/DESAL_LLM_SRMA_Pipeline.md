@@ -15,6 +15,22 @@ The dual-LLM approach serves two purposes: (1) a practical tool for this specifi
 
 The clinical protocol for this SR/MA, including PICO criteria, search strategy, and statistical analysis plan, is documented separately in `~/Desktop/DESAL/srma/DESAL_SRMA_Protocol.md`.
 
+### Methodological Precedent
+
+This pipeline was designed in light of emerging literature on LLM-assisted systematic review screening and extraction, while extending prior approaches through dual-model adjudication, confidence-based auto-resolution, multi-layer verification, audit sampling, and explicit human-escalation rules.
+
+Key precedents informing the design:
+
+- **Delgado-Chaves et al. (2025), PNAS** evaluated multiple LLMs for title/abstract screening in systematic reviews, demonstrating feasibility while highlighting the importance of prompt design, model selection, and calibration. Our structured screening prompt (Section 2.1) and confidence-threshold resolution logic (Section 2.2) address these concerns.
+
+- **Galli et al. (2025), Information** ("Large Language Models in Systematic Review Screening") provided methodological guidance on structured prompts, output formats, and the necessity of human oversight in LLM-assisted screening. Our pipeline adopts their recommendation for structured JSON output with per-criterion assessments (the `pico_assessment` object) and pre-specified human review triggers.
+
+- **Khan et al. (2025), JAMIA** ("Collaborative large language models for automated data extraction in living systematic reviews") demonstrated multi-model collaborative extraction with disagreement handling in a living SR context. Our extraction pipeline (Section 3) extends this approach with a formal disagreement classification system (Levels 0–5), a multi-layer verification skill to catch numerical hallucinations, and an LLM auditor layer that alternates models to avoid self-bias.
+
+- **Chen et al. (2026), Nature Medicine** ("LLM-assisted systematic review of large language models in clinical medicine") provided a prominent example of LLM-assisted large-scale review with human validation at scale, demonstrating that LLM screening can match human performance when combined with appropriate validation protocols.
+
+Our pipeline synthesizes and extends these approaches by: (a) requiring independent agreement from two different LLM families (Claude and GPT) rather than relying on a single model, (b) applying pre-specified confidence thresholds with escalation protocols for auto-excludes, (c) integrating a four-layer numerical verification system into the extraction phase, and (d) pre-specifying all pipeline parameters and committing code before data exposure to support reproducibility.
+
 ---
 
 ## 1. Search Phase
@@ -480,6 +496,7 @@ The LLM-assisted SR/MA methodology is independently publishable. A methods paper
 - The disagreement classification system
 - Empirical results: agreement rates, error types caught, time savings
 - Comparison with existing tools (e.g., ASReview, Rayyan AI features)
+- Positioning relative to Khan et al. (2025, JAMIA), Delgado-Chaves et al. (2025, PNAS), Galli et al. (2025, Information), and Chen et al. (2026, Nat Med) — framed as an extension/synthesis with novel components (dual-model adjudication, confidence-gated auto-resolution, four-layer verification, pre-specified disagreement taxonomy)
 
 ### 6.3 Limitations to Acknowledge
 

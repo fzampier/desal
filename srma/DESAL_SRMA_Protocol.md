@@ -461,6 +461,8 @@ This document describes the complete LLM-assisted pipeline for conducting a syst
 
 The dual-LLM approach serves two purposes: (1) a practical tool for this specific SR/MA, and (2) a publishable methodological innovation demonstrating how LLM-assisted systematic reviews can be conducted with appropriate safeguards. The methodology itself may warrant a standalone methods paper.
 
+This pipeline was designed in light of emerging literature on LLM-assisted systematic review screening and extraction (Delgado-Chaves et al. 2025, PNAS; Galli et al. 2025, Information; Khan et al. 2025, JAMIA; Chen et al. 2026, Nat Med), while extending prior approaches through dual-model adjudication, confidence-based auto-resolution, multi-layer numerical verification, audit sampling with escalation, and explicit human-escalation rules. See the Methodological Precedent section of the standalone pipeline specification (`pipeline/DESAL_LLM_SRMA_Pipeline.md`) for detailed positioning.
+
 The clinical protocol for this SR/MA, including PICO criteria, search strategy, and statistical analysis plan, is documented in the preceding sections of this protocol.
 
 ---

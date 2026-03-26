@@ -4,6 +4,8 @@
 
 This project implements a systematic review and meta-analysis of hypertonic saline for acute decompensated heart failure, using a dual-LLM pipeline (Claude + GPT-5.4) for screening and data extraction. The pipeline replaces the traditional dual-human reviewer approach with dual-AI reviewers, retaining human adjudication for disagreements and a 10% audit of auto-excludes.
 
+The approach builds on emerging work in LLM-assisted systematic reviews (Delgado-Chaves et al. 2025, PNAS; Galli et al. 2025, Information; Khan et al. 2025, JAMIA; Chen et al. 2026, Nat Med), extending these with dual-model adjudication, confidence-gated auto-resolution, a four-layer numerical verification system, and pre-specified disagreement taxonomy. See `pipeline/DESAL_LLM_SRMA_Pipeline.md` (Methodological Precedent section) for detailed positioning.
+
 The methodology is pre-specified, version-controlled, and registered on PROSPERO (CRD420261351795). All analysis code was committed before data exposure.
 
 ## Data Flow
