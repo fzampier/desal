@@ -223,158 +223,44 @@ Key finding: context display enables 100% detection with human review, at ~5 sec
 ### 3.2 Pydantic Extraction Schema
 
 **Status: Built.** Pre-specified before data exposure.
-**Location:** `~/Desktop/DESAL/extraction/schema/study_extraction.py` (77 top-level fields)
+**Location:** `~/Desktop/DESAL/extraction/schema/study_extraction.py`
 
-A structured schema that both models must output into. Using Pydantic enforces type validation, required fields, and consistent formatting across extractors. For this SR/MA, the schema captures all variables from the protocol's Appendix B data extraction form.
+A structured schema that both models must output into. Using Pydantic v2 enforces type validation, required fields, and consistent formatting across extractors. The schema captures all variables from the protocol's Appendix B data extraction form.
 
-```python
-from pydantic import BaseModel, Field
-from typing import Optional, Dict
-from enum import Enum
+**Architecture:** The schema uses nested Pydantic models rather than flat fields. This reduces field duplication (e.g., arm-level characteristics are defined once in `ArmCharacteristics` and instantiated for intervention and control arms) and groups outcome data into reusable structures (`BinaryOutcome`, `ContinuousOutcome`).
 
-class RoBJudgment(str, Enum):
-    LOW = "Low"
-    SOME_CONCERNS = "Some concerns"
-    HIGH = "High"
+**Enums** constrain categorical fields to valid values:
 
-class LOSMeasure(str, Enum):
-    MEAN_SD = "mean_sd"
-    MEDIAN_IQR = "median_iqr"
+- `RoBJudgment` — "Low", "Some concerns", "High" (RoB 2.0 domains)
+- `LOSMeasure` — "mean_sd", "median_iqr"
+- `StudyDesign` — "parallel", "crossover", "factorial", "cluster"
+- `ComparatorFluid` — "none", "normal_saline", "dextrose", "placebo", "other"
 
-class StudyExtraction(BaseModel):
-    # Study identification
-    study_id: str = Field(description="first_author_year format, e.g., 'Paterna_2000'")
-    author: str
-    year: int
-    country: str
-    single_center: bool
-    sample_size_total: int
-    sample_size_intervention: int
-    sample_size_control: int
+**Nested models:**
 
-    # Intervention details
-    hss_concentration_percent: float = Field(description="NaCl concentration, e.g., 1.4, 3.0, 4.6")
-    hss_volume_ml: float = Field(description="Volume per dose in mL")
-    hss_frequency: str = Field(description="e.g., 'BID', 'once daily', 'single dose'")
-    hss_duration_days: int
-    loop_diuretic: str = Field(description="Drug name, e.g., 'furosemide'")
-    loop_diuretic_dose_mg: float
+- `ArmCharacteristics` — Baseline characteristics for one study arm: demographics (age, sex), cardiac (EF, NYHA, etiology), labs (sodium, creatinine, eGFR, BNP, chloride with units/SDs), and baseline medications (diuretic dose, SGLT2i, ACEi/ARB/ARNI, beta-blocker, MRA as percentages). Includes a `@field_validator` that enforces 0–100 range on all percentage fields.
+- `BinaryOutcome` — Events and denominators per arm plus timepoint (e.g., mortality, readmission, hypernatremia, AKI, troponin elevation).
+- `ContinuousOutcome` — Value/SD per arm, plus `measure_type` ("mean_sd" or "median_iqr"), IQR bounds (Q1/Q3) for median-reported data, timepoint, and unit. Used for LOS, creatinine change, sodium change, chloride change, urine output, natriuresis, weight change, net fluid balance, and BNP change.
 
-    # Comparator details
-    comparator_description: str = Field(description="e.g., 'Normal saline + furosemide'")
-    comparator_diuretic_dose_mg: float
+**Top-level `StudyExtraction` field groups:**
 
-    # Patient characteristics (per arm)
-    mean_age_intervention: Optional[float] = None
-    sd_age_intervention: Optional[float] = None
-    mean_age_control: Optional[float] = None
-    sd_age_control: Optional[float] = None
-    percent_male: Optional[float] = None
-    mean_ef_intervention: Optional[float] = None
-    mean_ef_control: Optional[float] = None
-    baseline_sodium_intervention: Optional[float] = None
-    baseline_sodium_control: Optional[float] = None
-    baseline_creatinine_intervention: Optional[float] = None
-    baseline_creatinine_control: Optional[float] = None
-    baseline_bnp_intervention: Optional[float] = Field(default=None, description="BNP or NT-proBNP")
-    baseline_bnp_control: Optional[float] = None
-    bnp_type: Optional[str] = Field(default=None, description="'BNP' or 'NT-proBNP'")
-    nyha_class_distribution: Optional[Dict[str, float]] = Field(
-        default=None, description="e.g., {'II': 0.15, 'III': 0.60, 'IV': 0.25}"
-    )
+1. **Study identification** — study_id, PMID, DOI, author, year, title, journal, country, single_center, study_design (enum), registration_number, funding_source
+2. **Sample sizes** — total, intervention, control, plus analyzed_intervention/control (if ITT ≠ randomized)
+3. **Intervention details** — HSS concentration (with variable-concentration flag and range for Palermo protocol), volume, frequency, duration, infusion time, loop diuretic (drug, dose, frequency, route), co-interventions
+4. **Comparator details** — comparator_fluid (enum), fluid detail, diuretic drug/dose/route, co-interventions
+5. **Trial eligibility criteria** — age bounds, EF requirement, sodium requirement, renal threshold, time window, HF diagnosis method, NYHA requirement, exclusion flags (cardiogenic shock, dialysis, mechanical support), SGLT2i policy, diuretic resistance required/definition, minimum prior diuretic dose, other exclusions
+6. **Population/setting flags** — is_ambulatory, is_crossover, first_period_data_available, overlapping_cohort_flag, companion_publications
+7. **Baseline characteristics** — `intervention_arm: ArmCharacteristics`, `control_arm: ArmCharacteristics`
+8. **Outcomes** — Each is an Optional nested model: mortality (`BinaryOutcome`), los (`ContinuousOutcome`), readmission (`BinaryOutcome`), creatinine_change, sodium_change, peak_sodium, chloride_change, urine_output_24h, natriuresis_24h, weight_change, net_fluid_balance, bnp_change (all `ContinuousOutcome`), hypernatremia, aki, troponin_elevation (all `BinaryOutcome`)
+9. **Risk of Bias** — Six RoB 2.0 domains plus overall, each typed as `Optional[RoBJudgment]`
+10. **Classification flags** — palermo_group (bool, critical for key subgroup), blinding, follow_up_duration
+11. **Extraction metadata** — confidence_notes, extraction_source
 
-    # Trial eligibility criteria
-    age_min: Optional[int] = Field(default=None, description="Minimum age for inclusion")
-    age_max: Optional[int] = Field(default=None, description="Maximum age for inclusion")
-    ef_requirement: Optional[str] = Field(default=None, description="EF cutoff or requirement, e.g., '<40%', '>50%', 'any', 'not specified'")
-    sodium_requirement: Optional[str] = Field(default=None, description="Sodium requirement for inclusion, e.g., 'Na ≤135', 'hyponatremic only', 'no restriction'")
-    renal_function_threshold: Optional[str] = Field(default=None, description="eGFR or creatinine cutoff for inclusion/exclusion")
-    time_window_hours: Optional[float] = Field(default=None, description="Maximum hours from admission to enrollment")
-    hf_diagnosis_method: Optional[str] = Field(default=None, description="How HF was confirmed: 'clinical only', 'BNP required', 'echo required', etc.")
-    nyha_class_requirement: Optional[str] = Field(default=None, description="Required NYHA class, e.g., 'III-IV', 'any'")
-    excluded_cardiogenic_shock: Optional[bool] = Field(default=None, description="Whether cardiogenic shock was excluded")
-    excluded_dialysis: Optional[bool] = Field(default=None, description="Whether dialysis patients were excluded")
-    excluded_mechanical_support: Optional[bool] = Field(default=None, description="Whether mechanical circulatory support was excluded")
-    sglt2i_policy: Optional[str] = Field(default=None, description="Whether SGLT2i use was included, excluded, or not mentioned")
-    diuretic_resistance_required: Optional[bool] = Field(default=None, description="Whether trial required demonstrated diuretic resistance for enrollment")
-    diuretic_resistance_definition: Optional[str] = Field(default=None, description="How diuretic resistance was defined, e.g., 'inadequate response to ≥80mg furosemide', 'clinical judgment'")
-    minimum_prior_diuretic_dose: Optional[str] = Field(default=None, description="Minimum prior diuretic dose for inclusion, if specified")
-    key_other_exclusions: Optional[str] = Field(default=None, description="Other notable exclusion criteria")
+**Batch container:** `ExtractionBatch` wraps a list of `StudyExtraction` objects with model_name, extraction_date, and schema_version — used by the orchestrator to serialize each model's full extraction run.
 
-    # Outcomes — Mortality
-    mortality_intervention: Optional[int] = Field(default=None, description="Event count")
-    mortality_control: Optional[int] = None
-    mortality_timepoint: Optional[str] = Field(default=None, description="e.g., 'in-hospital', '30-day'")
+**JSON schema export:** `export_json_schema()` generates a JSON Schema from the Pydantic model, which is passed to both LLMs as part of the extraction prompt to ensure output conformance.
 
-    # Outcomes — Length of stay
-    los_intervention: Optional[float] = None
-    los_control: Optional[float] = None
-    los_measure: Optional[LOSMeasure] = None
-    los_sd_intervention: Optional[float] = Field(
-        default=None, description="SD if mean_sd, IQR bounds if median_iqr"
-    )
-    los_sd_control: Optional[float] = None
-
-    # Outcomes — Readmission
-    readmission_intervention: Optional[int] = None
-    readmission_control: Optional[int] = None
-    readmission_timepoint: Optional[str] = None
-
-    # Outcomes — Renal / Electrolytes
-    creatinine_change_intervention: Optional[float] = None
-    creatinine_change_control: Optional[float] = None
-    sodium_change_intervention: Optional[float] = Field(default=None, description="Change in serum sodium, intervention arm")
-    sodium_change_control: Optional[float] = Field(default=None, description="Change in serum sodium, control arm")
-    peak_sodium_intervention: Optional[float] = Field(default=None, description="Peak serum sodium during treatment, intervention arm")
-    peak_sodium_control: Optional[float] = Field(default=None, description="Peak serum sodium during treatment, control arm")
-
-    # Outcomes — Chloride values
-    baseline_chloride_intervention: Optional[float] = Field(default=None, description="Baseline serum chloride, intervention arm (mEq/L)")
-    baseline_chloride_control: Optional[float] = Field(default=None, description="Baseline serum chloride, control arm (mEq/L)")
-    chloride_change_intervention: Optional[float] = Field(default=None, description="Change in serum chloride, intervention arm")
-    chloride_change_control: Optional[float] = Field(default=None, description="Change in serum chloride, control arm")
-
-    # Outcomes — Diuretic response
-    urine_output_24h_intervention: Optional[float] = None
-    urine_output_24h_control: Optional[float] = None
-    natriuresis_24h_intervention: Optional[float] = Field(default=None, description="24h urine sodium excretion, intervention arm (mEq)")
-    natriuresis_24h_control: Optional[float] = Field(default=None, description="24h urine sodium excretion, control arm (mEq)")
-    weight_change_intervention: Optional[float] = None
-    weight_change_control: Optional[float] = None
-
-    # Outcomes — Natriuretic peptides
-    bnp_change_intervention: Optional[float] = None
-    bnp_change_control: Optional[float] = None
-
-    # Outcomes — Safety
-    hypernatremia_events_intervention: Optional[int] = None
-    hypernatremia_events_control: Optional[int] = None
-    aki_events_intervention: Optional[int] = None
-    aki_events_control: Optional[int] = None
-    troponin_elevation_intervention: Optional[int] = Field(default=None, description="Troponin elevation events, intervention arm")
-    troponin_elevation_control: Optional[int] = Field(default=None, description="Troponin elevation events, control arm")
-
-    # Risk of Bias (RoB 2.0)
-    rob_randomization: Optional[RoBJudgment] = None
-    rob_deviations: Optional[RoBJudgment] = None
-    rob_missing_data: Optional[RoBJudgment] = None
-    rob_measurement: Optional[RoBJudgment] = None
-    rob_selection: Optional[RoBJudgment] = None
-    rob_overall: Optional[RoBJudgment] = None
-
-    # Metadata
-    funding_source: Optional[str] = None
-    palermo_group: bool = Field(
-        description="True if from Paterna/Tuttolomondo research group"
-    )
-    confidence_notes: Optional[str] = Field(
-        default=None, description="Any extraction uncertainties or ambiguities"
-    )
-```
-
-Every field is typed and documented. Optional fields accommodate studies that don't report all outcomes. The `palermo_group` flag is critical for the key subgroup analysis.
-
-**Note:** Trial eligibility criteria are collected to assess GRADE indirectness (how well trial populations match the DESAL target population) and to explain heterogeneity. Sodium and chloride values are critical given the intervention mechanism and the trial's sodium-based stratification.
+The `palermo_group` flag is critical for the key subgroup analysis. Trial eligibility criteria are collected to assess GRADE indirectness and explain heterogeneity. Sodium and chloride values are critical given the intervention mechanism and the trial's sodium-based stratification.
 
 ### 3.3 Cross-Model Orchestration
 

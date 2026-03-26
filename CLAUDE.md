@@ -1,5 +1,8 @@
 # DESAL Project Context
 
+## Agents Record (MANDATORY)
+When you make ANY edit to files in this project, you MUST add a line to `agents_record.md` in the project root documenting what you did. Format: `**Agent Name** — Date: Brief description`. This is non-negotiable — the audit trail is part of the methodology.
+
 ## What This Is
 DESAL (Decongestion with Saline Loading) — a pragmatic, open-label, multicentre RCT of hypertonic saline vs standard of care in adults hospitalized with acute heart failure. This folder contains all project documents, analysis scripts, and the SR/MA pipeline specification.
 
