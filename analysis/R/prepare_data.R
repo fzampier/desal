@@ -217,10 +217,29 @@ main <- function() {
     los_n_ctrl = n_ctrl
   )
 
-  # Use mortality N as fallback for safety denominators
-  if (!"mortality_n_int" %in% names(df)) {
-    df$mortality_n_int <- df$los_n_int
-    df$mortality_n_ctrl <- df$los_n_ctrl
+  # Per-outcome N fallback chain: use outcome-specific N if available,
+  # otherwise fall back to mortality N, then overall arm N.
+  # This avoids silently using wrong denominators for subset analyses.
+  fallback_n_int <- ifelse(!is.na(df$mortality_n_int), df$mortality_n_int, df$los_n_int)
+  fallback_n_ctrl <- ifelse(!is.na(df$mortality_n_ctrl), df$mortality_n_ctrl, df$los_n_ctrl)
+
+  if (!"mortality_n_int" %in% names(df) || all(is.na(df$mortality_n_int))) {
+    df$mortality_n_int <- fallback_n_int
+    df$mortality_n_ctrl <- fallback_n_ctrl
+  }
+
+  # Safety outcomes: use per-outcome N if extracted, else fall back
+  if (!"hypernatremia_n_int" %in% names(df)) {
+    df$hypernatremia_n_int <- fallback_n_int
+    df$hypernatremia_n_ctrl <- fallback_n_ctrl
+  }
+  if (!"aki_n_int" %in% names(df)) {
+    df$aki_n_int <- fallback_n_int
+    df$aki_n_ctrl <- fallback_n_ctrl
+  }
+  if (!"readmission_n_int" %in% names(df) || all(is.na(df$readmission_n_int))) {
+    df$readmission_n_int <- fallback_n_int
+    df$readmission_n_ctrl <- fallback_n_ctrl
   }
 
   # Save

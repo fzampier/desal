@@ -102,11 +102,14 @@ class ArmCharacteristics(BaseModel):
     )
     sd_egfr: Optional[float] = None
     baseline_bnp: Optional[float] = Field(
-        default=None, description="Baseline BNP or NT-proBNP (pg/mL)"
+        default=None, description="Baseline BNP or NT-proBNP"
     )
     sd_bnp: Optional[float] = None
     bnp_type: Optional[str] = Field(
         default=None, description="'BNP' or 'NT-proBNP'"
+    )
+    bnp_unit: Optional[str] = Field(
+        default=None, description="'pg/mL' or 'pmol/L'"
     )
     baseline_chloride: Optional[float] = Field(
         default=None, description="Baseline serum chloride (mEq/L)"

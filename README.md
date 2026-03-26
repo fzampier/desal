@@ -59,6 +59,7 @@ All pipeline code was pre-specified and committed before data exposure. The git 
 
 **Safety:**
 - Hypernatremia events (Na >145 mEq/L)
+- Peak serum sodium during treatment
 - Acute kidney injury
 - Troponin elevation
 

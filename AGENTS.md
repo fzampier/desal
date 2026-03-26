@@ -32,11 +32,11 @@ DESAL (Decongestion with Saline Loading) — a pragmatic, open-label, multicentr
 - Dual-LLM screening and extraction pipeline planned (see pipeline doc)
 
 ## LLM-Assisted Pipeline
-- Dual-model approach: Codex + GPT-5.4 (Codex)
+- Dual-model approach: Claude + GPT-5.4 (via Codex)
 - API keys required: ANTHROPIC_API_KEY and OPENAI_API_KEY as environment variables
 - Screening: both models screen independently → auto-resolve agreements (confidence ≥0.70 required) → human reviews disagreements → 10% audit of auto-excludes with escalation protocol
 - Extraction: Pydantic schema → both models extract → verify with clinical-data-extractor skill (Layers 1-4) → disagreement classifier (L0-5) → LLM auditor → human reviews remaining conflicts
-- The clinical-data-extractor skill is at `clinical-data-extractor/` in this folder (and also at ~/.Codex/skills/clinical-data-extractor/)
+- The clinical-data-extractor skill is at `clinical-data-extractor/` in this folder (and also at ~/.claude/skills/clinical-data-extractor/)
 - Full pipeline specification in DESAL_LLM_SRMA_Pipeline.md
 
 ## Current Status (2026-03-24)
@@ -44,7 +44,7 @@ DESAL (Decongestion with Saline Loading) — a pragmatic, open-label, multicentr
 **Group 1 — Screening: COMPLETE** (pre-specified before data exposure)
 - Screening prompt template (v1.0, locked)
 - Screening resolution logic (confidence threshold 0.70, 10% audit of auto-excludes with escalation)
-- Screening orchestration script (handles PubMed CSV, NBIB, Embase RIS; calls Codex + GPT-5.4 APIs; outputs screening log, summary, human review queue, audit sample, metrics)
+- Screening orchestration script (handles PubMed CSV, NBIB, Embase RIS; calls Claude + GPT-5.4 APIs; outputs screening log, summary, human review queue, audit sample, metrics)
 
 **Group 2 — Extraction: COMPLETE** (pre-specified before data exposure)
 - Pydantic extraction schema (77 top-level fields, nested arm characteristics + outcomes)
@@ -91,8 +91,8 @@ DESAL (Decongestion with Saline Loading) — a pragmatic, open-label, multicentr
 - `DESAL_LLM_SRMA_Pipeline.md` — Full LLM pipeline specification
 - `screening_prompt_template.md` — Pre-specified screening prompt for both LLMs (v1.0, locked before data exposure)
 - `screening_resolution_logic.md` — Decision matrix and resolution rules for dual-LLM screening
-- `screening_orchestrator.py` — Title/abstract screening (both APIs, resolution, audit sampling, fuzzy dedup)
-- `fulltext_screening.py` — Full-text PDF screening with expanded exclusion criteria
+- `screening_orchestrator.py` — Python script that runs the full title/abstract screening pipeline (both APIs, resolution, audit sampling, fuzzy dedup)
+- `fulltext_screening.py` — Full-text PDF screening with expanded exclusion criteria (dual-LLM, same resolution logic)
 - `screening_README.md` — Usage instructions for the orchestrator
 
 ### `extraction/` — Data extraction pipeline (Group 2)

@@ -42,3 +42,4 @@ Format: `Agent Name — Date: Brief description of what was done`
 - **Claude Code** — March 25, 2026: Initialized git repo, committed all files (excluding trial/), pushed to github.com:fzampier/desal.git
 - **Claude Code** — March 25, 2026: Assisted with PROSPERO registration form answers
 - **Claude Code** — March 25, 2026: Fixed README pipeline table (R scripts and Pydantic schema marked Built), updated license section to reference CC BY 4.0
+- **Claude Code** — March 25, 2026: Project audit — fixed all findings: added PROSPERO ID (CRD420261351795) to protocol, fixed AGENTS.md Codex→Claude references and skill path, added peak sodium as exploratory/safety outcome to protocol Appendix B, added bnp_unit field to extraction schema, fixed per-outcome N denominators in prepare_data.R and meta_analysis.R, aligned AGENTS.md wording with CLAUDE.md

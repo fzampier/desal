@@ -642,15 +642,15 @@ main <- function() {
   message("\n=== SAFETY: HYPERNATREMIA ===")
   results$hypernatremia <- run_binary_ma(
     df, outdir, "Hypernatremia",
-    "hypernatremia_events_int", "mortality_n_int",
-    "hypernatremia_events_ctrl", "mortality_n_ctrl"
+    "hypernatremia_events_int", "hypernatremia_n_int",
+    "hypernatremia_events_ctrl", "hypernatremia_n_ctrl"
   )
 
   message("\n=== SAFETY: AKI ===")
   results$aki <- run_binary_ma(
     df, outdir, "Acute Kidney Injury",
-    "aki_events_int", "mortality_n_int",
-    "aki_events_ctrl", "mortality_n_ctrl"
+    "aki_events_int", "aki_n_int",
+    "aki_events_ctrl", "aki_n_ctrl"
   )
 
   message("\n=== SAFETY: TROPONIN ELEVATION ===")

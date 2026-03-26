@@ -8,7 +8,7 @@
 
 **Date:** March 24, 2026
 
-**Registration:** To be submitted to PROSPERO
+**Registration:** PROSPERO CRD420261351795
 
 **Corresponding author:** Fernando G. Zampieri
 
@@ -24,7 +24,7 @@ Hypertonic Saline Co-Administered with Loop Diuretics for Acute Decompensated He
 
 ### 1b. Registration
 
-This protocol will be submitted for registration with the International Prospective Register of Systematic Reviews (PROSPERO) prior to initiating the formal literature search.
+This protocol is registered with the International Prospective Register of Systematic Reviews (PROSPERO): CRD420261351795.
 
 ### 1c. Authors
 
@@ -108,6 +108,7 @@ Intravenous loop diuretics alone, or co-administered with isotonic saline (0.9% 
 - 24-hour urine sodium excretion (natriuresis, mEq)
 - Change in serum chloride from baseline (mEq/L)
 - Hypernatremia events (serum sodium >145 mEq/L)
+- Peak serum sodium during treatment (mEq/L; exploratory safety measure)
 - Acute kidney injury (as defined by study authors)
 - Troponin elevation during treatment (as defined by study authors; safety endpoint)
 
@@ -435,6 +436,7 @@ Results will be submitted for peer-reviewed publication and presented at relevan
 | Outcome | Urine output (24h or 48h): mean (SD) | Numeric |
 | Outcome | Creatinine change: mean (SD) | Numeric |
 | Outcome | Sodium change: mean (SD) | Numeric |
+| Outcome | Peak serum sodium during treatment: mean (SD) per arm | Numeric |
 | Outcome | BNP/NT-proBNP change: mean (SD) | Numeric |
 | Outcome | 24h urine sodium excretion (natriuresis): mean (SD) | Numeric |
 | Outcome | Chloride change: mean (SD) | Numeric |
